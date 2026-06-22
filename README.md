@@ -99,6 +99,9 @@ npm run dev       # UI at http://localhost:5173 — #26144 ladder shows PASS on 
 - **`resolveMarkupTier`**, **`priceLadder`** (with optional tooling amortization),
   **`toolingEstimate`**, **`confidenceScore`**, and **`validateQuoteInput`**.
 
+  <img width="2276" height="1890" alt="image" src="https://github.com/user-attachments/assets/f9104448-e68f-4df7-83b6-ab04c806da31" />
+
+
 ## Where to look
 
 - **Engine:** [`src/engine/engine.ts`](./src/engine/engine.ts)
