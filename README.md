@@ -56,3 +56,54 @@ a short `NOTES.md`: anything you reverse-engineered and weren't sure about, any
 assumptions, and what you'd add next with more time.
 
 Good luck.
+
+---
+
+# Solution — Submission
+
+> Everything above is the original take-home brief. This section documents the
+> completed submission.
+
+The quote engine in [`src/engine/engine.ts`](./src/engine/engine.ts) is fully
+implemented. All nine functions are done; every formula was **reverse-engineered from
+the worked examples in [`SPEC.md`](./SPEC.md)** (the spec deliberately withholds them)
+and verified to **5 decimal places** against examples A, B, and C.
+
+## Status
+
+| Check | Result |
+|---|---|
+| `npm test` (public #26144 anchor) | ✅ 4 / 4 pass |
+| `tests/engine.mine.spec.ts` (my edge-case suite) | ✅ 36 / 36 pass |
+| `tsc --noEmit` typecheck | ✅ clean |
+| `npm run build` (incl. provided UI) | ✅ builds |
+
+## How to run
+
+```bash
+npm install
+npm test          # public anchor tests
+npx vitest run    # full suite (public + my own tests)
+npm run dev       # UI at http://localhost:5173 — #26144 ladder shows PASS on every row
+```
+
+## What was implemented
+
+- **`shotWeight`** — `cav*part_g + runner_g`.
+- **`weightFromVolume`** — converts CAD volume to cm³ first (inch ×16.387064, mm ÷1000,
+  cm ×1), then × density. Never assumes millimeters.
+- **`costStack`** — the seven per-part components: `material` (resin + colorant per lb),
+  `purge` / `setup` (one-time costs amortized over `order_qty`), `molding` (machine rate
+  ÷ parts-per-hour), and the optional `insert` / `secondary` / `outside` branches.
+- **`sellPrice`** — `total × (1 + scrap%) × (1 + markup%)` (markup, **not** margin).
+- **`resolveMarkupTier`**, **`priceLadder`** (with optional tooling amortization),
+  **`toolingEstimate`**, **`confidenceScore`**, and **`validateQuoteInput`**.
+
+## Where to look
+
+- **Engine:** [`src/engine/engine.ts`](./src/engine/engine.ts)
+- **My tests:** [`tests/engine.mine.spec.ts`](./tests/engine.mine.spec.ts) — covers
+  examples B & C, amortization, unit conversion, tier boundaries, the `cav === 0` edge,
+  and validation order.
+- **Reverse-engineering notes & assumptions:** [`NOTES.md`](./NOTES.md) — including the
+  one genuine ambiguity (the insert-freight denominator) and how the SPEC hint resolved it.
